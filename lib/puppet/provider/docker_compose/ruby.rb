@@ -66,6 +66,9 @@ Puppet::Type.type(:docker_compose).provide(:ruby) do
   end
 
   def create
+    environment.each |name, value| {
+      ENV[name] = value
+    }
     Puppet.info("Running compose project #{name}")
     args = [compose_files, '-p', name, 'up', '-d', '--remove-orphans'].insert(3, resource[:options]).insert(5, resource[:up_args]).compact
     dockercompose(args)
